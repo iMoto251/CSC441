@@ -48,6 +48,11 @@ app.get('/test',(req, res) => {
 
 app.get('/gitget/:username',(req, res) => {
   const {username} = req.params;
+  fetch(`https://api.github.com/users/${username}/repos?type=all&sort=updated`, {
+    method: 'GET'
+  })
+    .then(res => res.json())
+    .then(json => console.log(json))const {username} = req.params;
   res = fetch(`https://api.github.com/users/${username}/repos?type=all&sort=updated`, {
     method: 'GET'
   });
