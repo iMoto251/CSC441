@@ -53,6 +53,9 @@ app.get('/gitget/:username',(req, res) => {
   })
     .then(res => res.json())
     .then(json => console.log(json))
+    .then(json => res.send(json))
+
+  //res.json().end();
   
   //res => res.json();
   //const requestURL = `https://api.github.com/users/${username}/repos?type=all&sort=updated`;
