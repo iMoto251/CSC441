@@ -48,21 +48,9 @@ app.get('/test',(req, res) => {
 
 app.get('/gitget/:username',(req, res) => {
   const {username} = req.params;
-  fetch(`https://api.github.com/users/${username}/repos?type=all&sort=updated`, {
-    method: 'GET'
-  })
+  fetch(`https://api.github.com/users/${username}/repos?type=all&sort=updated`)
     .then(res => res.json())
-    .then(json => console.log(json))
     .then(json => res.send(json))
-
-  //res.json().end();
-  
-  //res => res.json();
-  //const requestURL = `https://api.github.com/users/${username}/repos?type=all&sort=updated`;
-  //const repos = yield call(request, requestURL);
-  //console.log(`repos: ${JSON.stringify(repos)}`)
-  //yield put(reposLoaded(repos, username));
-  //res.json(ghrepos).end();
 })
 
 
