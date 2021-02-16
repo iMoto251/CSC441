@@ -10,7 +10,7 @@ const fs = require('fs');
 const { EventEmitter } = require('events');
 
 const main = async () => {
-    const myEmitter = new EventEmitter();
+    const messageEmitter = new EventEmitter();
     const url1 = 'https://raw.githubusercontent.com/samayo/country-json/master/src/country-by-capital-city.json';
     const url2 = 'https://raw.githubusercontent.com/samayo/country-json/master/src/country-by-abbreviation.json';
     const url3 = 'https://raw.githubusercontent.com/samayo/country-json/master/src/country-by-continent.json';
@@ -26,17 +26,17 @@ const main = async () => {
     let abrStr = '';
     let abrObj = {};
 
-    const capResponse = await fetch(url1);
-    capResponse.body.pipe(ws1);
-    const abrResponse = await fetch(url2);
-    abrResponse.body.pipe(ws2);
-    const conResponse = await fetch(url3);
-    conResponse.body.pipe(ws3);
+    const capRes = await fetch(url1);
+    capRes.body.pipe(ws1);
+    const abrRes = await fetch(url2);
+    abrRes.body.pipe(ws2);
+    const conRes = await fetch(url3);
+    conRes.body.pipe(ws3);
     ws3.on('close', () =>{
-        myEmitter.emit('ws3Close');
+        messageEmitter.emit('ws3Close');
     })
 
-    myEmitter.on('ws3Close', () =>{
+    messageEmitter.on('ws3Close', () =>{
         const rs1 = fs.createReadStream(`${__dirname}/countrycapital.json`);
         const rs2 = fs.createReadStream(`${__dirname}/countryabbreviation.json`);
         const rs3 = fs.createReadStream(`${__dirname}/countrycontinent.json`);
@@ -53,7 +53,7 @@ const main = async () => {
             conObj.forEach(ele =>{
                 let temp = {};
     
-                myEmitter.emit(ele.continent, ele, capObj, abrObj, temp);
+                messageEmitter.emit(ele.continent, ele, capObj, abrObj, temp);
 
                 if(!fs.existsSync(`${__dirname}/${ele.continent}.json`)){
                     fs.createWriteStream(`${__dirname}/${ele.continent}.json`);
@@ -69,11 +69,11 @@ const main = async () => {
                 }
                 for(var member in temp) delete temp[member];
             })
-            myEmitter.emit('complete')
+            messageEmitter.emit('complete')
         })
     })
 
-    myEmitter.on('complete', () =>{
+    messageEmitter.on('complete', () =>{
         //This just finishes the file to make it .json compliant
         fs.appendFile(`${__dirname}/Africa.json`, '\n]', 'utf8', () =>{});
         fs.appendFile(`${__dirname}/Antarctica.json`, '\n]', 'utf8', () =>{});
@@ -85,7 +85,7 @@ const main = async () => {
     })
 
     
-    myEmitter.on('Antarctica', (ele, capObj, abrObj, temp) =>{
+    messageEmitter.on('Antarctica', (ele, capObj, abrObj, temp) =>{
         for(i in capObj){
             if(capObj[i].country == ele.country){
                 temp.country_name = capObj[i].country;
@@ -95,7 +95,7 @@ const main = async () => {
         }        
     })
 
-    myEmitter.on('Africa', (ele, capObj, abrObj, temp) =>{
+    messageEmitter.on('Africa', (ele, capObj, abrObj, temp) =>{
         for(i in capObj){
             if(capObj[i].country == ele.country){
                 temp.country_name = capObj[i].country;
@@ -105,7 +105,7 @@ const main = async () => {
         }        
     })
 
-    myEmitter.on('Asia', (ele, capObj, abrObj, temp) =>{
+    messageEmitter.on('Asia', (ele, capObj, abrObj, temp) =>{
         for(i in capObj){
             if(capObj[i].country == ele.country){
                 temp.country_name = capObj[i].country;
@@ -115,7 +115,7 @@ const main = async () => {
         }        
     })
 
-    myEmitter.on('Europe', (ele, capObj, abrObj, temp) =>{
+    messageEmitter.on('Europe', (ele, capObj, abrObj, temp) =>{
         for(i in capObj){
             if(capObj[i].country == ele.country){
                 temp.country_name = capObj[i].country;
@@ -125,7 +125,7 @@ const main = async () => {
         }        
     })
 
-    myEmitter.on('North America', (ele, capObj, abrObj, temp) =>{
+    messageEmitter.on('North America', (ele, capObj, abrObj, temp) =>{
         for(i in capObj){
             if(capObj[i].country == ele.country){
                 temp.country_name = capObj[i].country;
@@ -135,7 +135,7 @@ const main = async () => {
         }        
     })
 
-    myEmitter.on('Oceania', (ele, capObj, abrObj, temp) =>{
+    messageEmitter.on('Oceania', (ele, capObj, abrObj, temp) =>{
         for(i in capObj){
             if(capObj[i].country == ele.country){
                 temp.country_name = capObj[i].country;
@@ -145,7 +145,7 @@ const main = async () => {
         }        
     })
 
-    myEmitter.on('South America', (ele, capObj, abrObj, temp) =>{
+    messageEmitter.on('South America', (ele, capObj, abrObj, temp) =>{
         for(i in capObj){
             if(capObj[i].country == ele.country){
                 temp.country_name = capObj[i].country;
