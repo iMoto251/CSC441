@@ -21,18 +21,30 @@ fetch.Promise = Promise;
     const ws2 = fs.createWriteStream(`${__dirname}/abbreviations.json`);
     const ws3 = fs.createWriteStream(`${__dirname}/cities.json`);
 
-    const rs = fs.createReadStream(`${__dirname}/continents.json`);
-    const rs2 = fs.createReadStream(`${__dirname}/abbreviations.json`);
-    const rs3 = fs.createReadStream(`${__dirname}/cities.json`);
+    // const rs = fs.createReadStream(`${__dirname}/continents.json`);
+    // const rs2 = fs.createReadStream(`${__dirname}/abbreviations.json`);
+    // const rs3 = fs.createReadStream(`${__dirname}/cities.json`);
 
-    rs.on('data', (stri) => conStr += stri);
-    rs2.on('data', (stri) => abbStr += stri);
-    rs3.on('data', (stri) => citStr += stri);
+    // rs.on('data', (stri) => {
+    //     conStr += stri;
+    //     console.log('Made it');
+    // });
+    // rs2.on('data', (stri) => abbStr += stri);
+    // rs3.on('data', (stri) => citStr += stri);
  
     
 
-    rs.on('conts', () => {
-        console.log('continents: ', conStr);
+    myEmitter.on('conts', () => {
+        const rs = fs.createReadStream(`${__dirname}/continents.json`);
+        const rs2 = fs.createReadStream(`${__dirname}/abbreviations.json`);
+        const rs3 = fs.createReadStream(`${__dirname}/cities.json`);
+        rs.on('data', (stri) => {
+            conStr += stri;
+            //console.log('Made it');
+        });
+        rs2.on('data', (stri) => abbStr += stri);
+        rs3.on('data', (stri) => citStr += stri);
+        console.log('continents: ', JSON.stringify(conStr));
        // continentsData = JSON.parse(conStr);
     });
 
