@@ -74,6 +74,7 @@ const main = async () => {
     })
 
     myEmitter.on('complete', () =>{
+        //This just finishes the file to make it .json compliant
         fs.appendFile(`${__dirname}/Africa.json`, '\n]', 'utf8', () =>{});
         fs.appendFile(`${__dirname}/Antarctica.json`, '\n]', 'utf8', () =>{});
         fs.appendFile(`${__dirname}/Asia.json`, '\n]', 'utf8', () =>{});
