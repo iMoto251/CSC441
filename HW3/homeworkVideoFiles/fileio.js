@@ -1,4 +1,3 @@
-const { dir } = require('console');
 const fs = require('fs');
 
 const ws = fs.createWriteStream(`${__dirname}/firsttest.json`);
