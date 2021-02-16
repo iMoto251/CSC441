@@ -1,3 +1,4 @@
+const { dir } = require('console');
 const fs = require('fs');
 
 const ws = fs.createWriteStream(`${__dirname}/firsttest.json`);
@@ -16,7 +17,7 @@ rs.on('data', (str) => body+=str);
 rs.on('close',() => {
     console.log('body: ', body);
     let o = JSON.parse(body);
-    Object.keys(o).forEach((key, i) =>{
+    Object.keys(o).forEach((key) =>{
         console.log(key, o[key]);
     })
 })
