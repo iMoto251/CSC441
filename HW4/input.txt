@@ -4,15 +4,19 @@ $1,000,000,023.45 is a lot of money.
 -$250,000,456 is a lot of debt.
 +$234,922.99 was the transaction.
 USD45M added.
+<p>We need $25k</p>
 We need $25K.
 Amazon spent $4B on drones.
 
 My birthday is January 05, 1960.
 6/1/00 was a great day in history.
+<h>He doesn't like 04-Jul, 2004, it was a bad day.</h>
 He doesn't like 04-Jul, 2004, it was a bad day.
 2021-20-01 is when school starts.
 
+<a>My phone number is 6012664949.</a>
 My phone number is 6012664949.
 +1 601 266-4949 is where you can reach me.
 Call (601)-266-4949 to get a hold of me.
 Look for 001-601-266-4949 on my door.
+<body>Call me at 6012664949</body>
