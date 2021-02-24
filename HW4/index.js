@@ -4,7 +4,7 @@ var isDate = require('./dates').isDate;
 var isPNum = require('./phone_number').isPNum;
 
 const fs = require('fs');
-const readline = require('readline');
+//const readline = require('readline');
 
 const main = async() => {
     let body = '';
@@ -15,6 +15,8 @@ const main = async() => {
         console.log(isCurrency(body));
         console.log(isTag(body));
         console.log(isDate(body));
-        console.log(isPn(body));
+        console.log(isPNum(body));
     })
 }
+
+main();
