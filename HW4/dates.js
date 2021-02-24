@@ -1,28 +1,31 @@
-var isDate = function(str){
+var ifDate = function(str){
     let re = /\w+\s+\d{1,2},\s\d{4}/g;
     if (re.test(str)){
-        return str.match(re);
+        console.log(str.match(re))
+        return true;
     } else {
         re = /\d{1,2}\/\d{1,2}\/\d{2}/g;
         if(re.test(str)){
-            return str.match(re);
+            console.log(str.match(re))
+            return true;
         } else{
             re = /\d{2}-[a-zA-Z]{3},\s\d{4}/g;
             if (re.test(str)){
-                return str.match(re);
+                console.log(str.match(re))
+                return true;
             }else{
                 re = /\d{4}-\d{2}-\d{2}/g;
                 if (re.test(str)){
-                    return str.match(re);
+                    console.log(str.match(re))
+                    return true;
                 } else{
-                    return 'No Date match';
+                    return false;
                 }
             }
         }
     }
-
 }
 
 module.exports = {
-    isDate: isDate
+    ifDate: ifDate
 };
