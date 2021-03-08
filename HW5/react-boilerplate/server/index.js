@@ -1,6 +1,9 @@
 /* eslint consistent-return:0 import/order:0 */
 
 const express = require('express');
+const path = require('path');
+const fetch = require('node-fetch');
+
 const logger = require('./logger');
 
 const argv = require('./argv');
@@ -18,10 +21,14 @@ const app = express();
 // app.use('/api', myApi);
 
 // In production we need to pass these values in instead of relying on webpack
-setup(app, {
+const options = {
   outputPath: resolve(process.cwd(), 'build'),
   publicPath: '/',
-});
+}
+
+const { fsInMem } = setup(app, options);
+const isProd = process.env.NODE_ENV === 'production';
+
 
 // get the intended host and port number, use localhost and port 3000 if not provided
 const customHost = argv.host || process.env.HOST;
@@ -34,6 +41,35 @@ app.get('*.js', (req, res, next) => {
   res.set('Content-Encoding', 'gzip');
   next();
 });
+
+app.get('/test',(req, res) => {
+  res.json({course: 'csc441'}).end();
+})
+
+app.get('/gitget/:username',(req, res) => {
+  const {username} = req.params;
+  fetch(`https://api.github.com/users/${username}/repos?type=all&sort=updated`)
+    .then(res => res.json())
+    .then(json => res.send(json))
+})
+
+
+if (isProd) {
+  const outputPath = options.outputPath || path.resolve(process.cwd(), 'build');
+  app.get('*', (req, res) =>
+  res.sendFile(path.resolve(outputPath, 'index.html')),
+  );
+} else {
+  app.get('*', (req, res) => {
+    fsInMem.readFile(path.join(options.outputPath, 'index.html'), (err, file) => {
+      if (err) {
+        res.sendStatus(404);
+      } else {
+        res.send(file.toString());
+      }
+    });
+  });
+}
 
 // Start your app.
 app.listen(port, host, async err => {
