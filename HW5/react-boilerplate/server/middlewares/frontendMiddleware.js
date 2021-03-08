@@ -3,7 +3,7 @@
 /**
  * Front-end middleware
  */
-module.exports = (app, options) => {
+ module.exports = (app, options) => {
   const isProd = process.env.NODE_ENV === 'production';
 
   let fsInMem;
@@ -16,5 +16,5 @@ module.exports = (app, options) => {
     fsInMem = addDevMiddlewares(app, webpackConfig);
   }
 
-  return { app, fsInMem };
+  return {app, fsInMem};
 };

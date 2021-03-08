@@ -27,7 +27,6 @@ module.exports = function addDevMiddlewares(app, webpackConfig) {
   const fs = middleware.fileSystem;
 
   return fs;
-
   // app.get('*', (req, res) => {
   //   fs.readFile(path.join(compiler.outputPath, 'index.html'), (err, file) => {
   //     if (err) {

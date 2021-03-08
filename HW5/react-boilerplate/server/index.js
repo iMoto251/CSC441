@@ -1,8 +1,11 @@
 /* eslint consistent-return:0 import/order:0 */
 
+const Promise = require('bluebird');
+const redis = Promise.promisifyAll(require('redis'));
 const express = require('express');
 const path = require('path');
 const fetch = require('node-fetch');
+const argon2 = require('argon2');
 
 const logger = require('./logger');
 
@@ -16,6 +19,7 @@ const ngrok =
     : false;
 const { resolve } = require('path');
 const app = express();
+const client = redis.createClient();
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
@@ -27,8 +31,6 @@ const options = {
 }
 
 const { fsInMem } = setup(app, options);
-const isProd = process.env.NODE_ENV === 'production';
-
 
 // get the intended host and port number, use localhost and port 3000 if not provided
 const customHost = argv.host || process.env.HOST;
@@ -42,22 +44,61 @@ app.get('*.js', (req, res, next) => {
   next();
 });
 
-app.get('/test',(req, res) => {
-  res.json({course: 'csc441'}).end();
-})
+// app.get('/test', (req, res)=>{
+//   res.json({course: 'csc441'}).end();
+// });
 
-app.get('/gitget/:username',(req, res) => {
+app.get('/gitget/:username', (req, res)=>{
   const {username} = req.params;
-  fetch(`https://api.github.com/users/${username}/repos?type=all&sort=updated`)
-    .then(res => res.json())
-    .then(json => res.send(json))
-})
+  // make a request using fetch to api.github.com and pass username
+  fetch(`https://api.github.com/users/${username}/repos?type=all&sort=updated`).then(res => res.json()).then(json => res.send(json));
+  //next();
+  // take the json from the responce and send it to the client
+  //res.json({course: 'csc441', username: username}).end();
+});
 
+app.get('/argon2/:pw', async (req, res) => {
+  const {pw} = req.params;
+  try{
+    const enc_pw = await argon2.hash(pw);
+    const result = await client.setAsync(pw, enc_pw);
+    console.log('result: ', result);
+    res.send('OK\n');
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
+
+app.get('/argon2/verify/:pw', async (req, res) => {
+  const {pw} = req.params;
+  try {
+    const enc_pw = await client.getAsync(pw);
+    const verified_pw = await argon2.verify(enc_pw, pw);
+    if (verified_pw) {
+      res.send(`${JSON.stringify({pw, verified_pw})}\n`);
+    } else {
+      res.send('you are a stranger');
+    }
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
+
+app.post('/signup', (req, res) => {
+  const body = req.body;
+  
+});
+
+app.post('/signin', (req, res) => {
+
+});
+
+const isProd = process.env.NODE_ENV === 'production';
 
 if (isProd) {
   const outputPath = options.outputPath || path.resolve(process.cwd(), 'build');
   app.get('*', (req, res) =>
-  res.sendFile(path.resolve(outputPath, 'index.html')),
+    res.sendFile(path.resolve(outputPath, 'index.html')),
   );
 } else {
   app.get('*', (req, res) => {
