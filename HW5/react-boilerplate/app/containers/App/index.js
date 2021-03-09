@@ -14,6 +14,8 @@ import { Routes, Route } from 'react-router-dom';
 import HomePage from 'containers/HomePage/Loadable';
 import FeaturePage from 'containers/FeaturePage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import SigninPage from 'containers/SigninPage/Loadable';
+import SignupPage from 'containers/SignupPage/Loadable';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 
@@ -41,6 +43,8 @@ export default function App() {
       <Routes>
         <Route exact path="/" element={<HomePage />} />
         <Route path="/features" element={<FeaturePage />} />
+        <Route path="/signin" element={<SigninPage />} />
+        <Route path="/signup" element={<SignupPage />} />
         <Route path="" element={<NotFoundPage />} />
       </Routes>
       <Footer />
