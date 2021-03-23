@@ -5,8 +5,13 @@ const express = require('express');
 const path = require('path');
 const fetch = require('node-fetch');
 const argon2 = require('argon2');
+const session = require('express-session');
+let RedisStore = require('connect-redis')(session);
+const csrf = require('csurf');
 
 const logger = require('./logger');
+
+var csrfProtection = csrf();
 
 const argv = require('./argv');
 const port = require('./port');
@@ -23,6 +28,15 @@ const client = redis.createClient();
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+app.use(
+  session({
+    store: new RedisStore({ client: client }),
+    secret: 'aee7d3d9aa69972eb2f767d41be45f8e1d71618a817232c2e08d8129f218f0a4',
+    resave: false,
+    saveUninitialized: false,
+  })
+)
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
@@ -76,8 +90,10 @@ app.get(/^\/main~([a-z0-9]{8})\.([a-z0-9]{20})\.js(\.gz|\.LICENSE\.txta)?$/,(req
   res.send(`${req.url}\n`)
 })
 
-app.post('/signup', (req, res) => {
+app.post('/signup', csrfProtection, (req, res) => {
   const body = req.body;
+  console.log('body: ', JSON.stringify(body))
+  res.send(`${JSON.stringify(body)}\n`)
 })
 
 
@@ -134,7 +150,16 @@ if (isProd) {
     res.sendFile(path.resolve(outputPath, 'index.html'))
   });
 } else {
-  app.get('*', (req, res) => {
+  app.get('*', csrfProtection, (req, res) => {
+    if (req.session.views){
+      req.session.views++;
+    } else {
+      req.session.views = 1;
+    }
+    const csrf_token = req.csrfToken();
+    console.log('csrf_token: ', csrf_token);
+    console.log('req.session: ', req.session);
+    res.setHeader('X-CSRF-Token', csrf_token)
     fsInMem.readFile(path.join(options.outputPath, 'index.html'), (err, file) => {
       if (err) {
         res.sendStatus(404);
