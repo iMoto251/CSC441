@@ -21,13 +21,9 @@ export default defineMessages({
     id: `${scope}.tryme.header`,
     defaultMessage: 'Try me!',
   },
-  usernameMessage: {
-    id: `${scope}.username.message`,
-    defaultMessage: 'Username: ',
-  },
-  passwordMessage: {
-    id: `${scope}.password.message`,
-    defaultMessage: 'Password: ',
+  trymeMessage: {
+    id: `${scope}.tryme.message`,
+    defaultMessage: 'Show Github repositories by',
   },
   trymeAtPrefix: {
     id: `${scope}.tryme.atPrefix`,

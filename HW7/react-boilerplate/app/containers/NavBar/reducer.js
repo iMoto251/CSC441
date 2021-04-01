@@ -8,26 +8,22 @@
  */
 
 import produce from 'immer';
-import { CHANGE_USERNAME, CHANGE_PASSWORD } from './constants';
+import { TOKEN_RECD } from './constants';
 
 // The initial state of the App
 export const initialState = {
-  username: '',
-  password: '',
+  token: '',
 };
 
 /* eslint-disable default-case, no-param-reassign */
-const homeReducer = (state = initialState, action) =>
+const navBarReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
-      case CHANGE_USERNAME:
+      case TOKEN_RECD:
         // Delete prefixed '@' from the github username
-        draft.username = action.username;
-        break;
-      case CHANGE_PASSWORD:
-        draft.password = action.password;
+        draft.token = action.token;
         break;
     }
   });
 
-export default homeReducer;
+export default navBarReducer;

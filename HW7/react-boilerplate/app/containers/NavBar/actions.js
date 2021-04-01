@@ -15,7 +15,7 @@
  *    }
  */
 
-import { CHANGE_USERNAME, CHANGE_PASSWORD, SUBMIT_USER_CREDS } from './constants';
+import { GET_TOKEN, TOKEN_RECD } from './constants';
 
 /**
  * Changes the input field of the form
@@ -24,22 +24,15 @@ import { CHANGE_USERNAME, CHANGE_PASSWORD, SUBMIT_USER_CREDS } from './constants
  *
  * @return {object} An action object with a type of CHANGE_USERNAME
  */
-export function changeUsername(username) {
+export function getToken() {
   return {
-    type: CHANGE_USERNAME,
-    username,
+    type: GET_TOKEN,
   };
 }
 
-export function changePassword(password) {
-  return {
-    type: CHANGE_PASSWORD,
-    password,
-  };
-}
-
-export function submitUserCreds() {
-  return {
-    type: SUBMIT_USER_CREDS,
+export function tokenReceived(token){
+  return{
+    type: TOKEN_RECD,
+    token,
   };
 }

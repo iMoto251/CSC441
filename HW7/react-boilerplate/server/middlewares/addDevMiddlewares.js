@@ -4,6 +4,8 @@ const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
 function createWebpackMiddleware(compiler, publicPath) {
+  console.log('create')
+
   return webpackDevMiddleware(compiler, {
     //logLevel: 'warn',
     publicPath,

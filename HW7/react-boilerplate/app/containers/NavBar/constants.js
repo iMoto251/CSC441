@@ -9,6 +9,5 @@
  * export const YOUR_ACTION_CONSTANT = 'yourproject/YourContainer/YOUR_ACTION_CONSTANT';
  */
 
-export const CHANGE_USERNAME = 'boilerplate/Home/CHANGE_USERNAME';
-export const CHANGE_PASSWORD = 'boilerplate/Home/CHANGE_PASSWORD';
-export const SUBMIT_USER_CREDS = 'boilerplate/Home/SUBMIT_USER_CREDS';
+export const GET_TOKEN = 'boilerplate/NavBar/GET_TOKEN';
+export const TOKEN_RECD = 'boilerplate/NavBar/TOKEN_RECD';
