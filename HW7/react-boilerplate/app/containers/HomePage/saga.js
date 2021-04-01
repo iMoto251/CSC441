@@ -39,6 +39,13 @@ export function* submitUserCredsGen() {
   try{
     const result = yield call(post_request, requestURL, {username, password}, token);
     console.log(`result: ${JSON.stringify(result)}`);
+    try{
+      const newrequestURL = 'http://localhost:3000/userhome'
+      const result = yield call(post_request, newrequestURL, {username, password}, token);
+      console.log(`result: ${JSON.stringify(result)}`);
+    } catch (err){
+      console.log(`submitUserCredsGenError on userhome: ${err}`);
+    }
   } catch(err) {
     console.log(`submitUserCredsGenError: ${err}`);
   }

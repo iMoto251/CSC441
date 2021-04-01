@@ -8,11 +8,7 @@ const argon2 = require('argon2');
 const session = require('express-session');
 let RedisStore = require('connect-redis')(session);
 const csurf = require('csurf');
-
 const logger = require('./logger');
-
-var csrfProtection = csurf();
-
 const argv = require('./argv');
 const port = require('./port');
 const setup = require('./middlewares/frontendMiddleware');
@@ -22,17 +18,20 @@ const ngrok =
     ? require('ngrok')
     : false;
 const { resolve } = require('path');
+const { Cookie } = require('express-session');
 
 const client = redis.createClient();
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+var csrfProtection = csurf({ignoreMethods: ["HEAD", "OPTIONS"]});
+
 
 app.use(
   session({
     store: new RedisStore({ client: client }),
-    secret: 'aee7d3d9aa69972eb2f767d41be45f8e1d71618a817232c2e08d8129f218f0a4',
+    secret: 'keyboard-cat',
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -65,6 +64,12 @@ app.get('*.js', (req, res, next) => {
 
   res.set('Content-Encoding', 'gzip');
   next();
+});
+
+app.head('/get_csrf_token', csrfProtection, (req, res) =>{
+  const csrf_token = req.csrfToken();
+  res.setHeader('X-CSRF-Token', csrf_token);
+  res.send("OK")
 });
 
 app.get('/test',(req, res) => {
@@ -101,11 +106,31 @@ app.post('/signup', csrfProtection, (req, res) => {
   res.json(body)
 })
 
+app.post('/signin', csrfProtection, (req, res) => {
+  var oldsession = req.session;
+  var oldcsrfToken = req.header.get('X-CSRF-Token');
 
-app.post('/signin', (req, res) => {
-  const body = req.body;
-  console.log('signin:body: ', body);
-  res.json(body);
+  var username = req.body.username;
+  var password = req.body.password;
+
+  req.session.regenerate(function (err){
+    const csrf_token = req.csrfToken();
+    //console.log('new csrf token: ', csrf_token);
+    req.body.username = username;
+    req.body.password = password;
+    res.setHeader('X-CSRF-Token', csrf_token);
+    req.session.cookie = new Cookie({
+      httpOnly: true,
+      secure: false,
+      maxAge: 365*24*60*60
+    })
+  })
+})
+
+app.post('/userhome', csrfProtection, (req,res) =>{
+  const csrf_token = req.csrfToken();
+  res.setHeader('X-CSRF-Token', csrf_token)
+  console.log('Client X-CSRF-Token: ', csrf_token)
 })
 
 app.get('/argon2/:pw', async (req, res) => {
